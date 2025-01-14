@@ -17,8 +17,8 @@ A powerful PowerPoint translation tool that preserves all formatting while trans
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/tristan-mcinnis/PPT-Translator-Formatting-Intact-with-Deepseek-.git
-cd PPT-Translator-Formatting-Intact-with-Deepseek-
+git clone https://github.com/tristan-mcinnis/PPT-Translator-Formatting-Intact-with-Deepseek.git
+cd PPT-Translator-Formatting-Intact-with-Deepseek
 ```
 
 2. Create and activate a virtual environment:
@@ -87,7 +87,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/tristan-mcinnis/PPT-Translator-Formatting-Intact-with-Deepseek-/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/tristan-mcinnis/PPT-Translator-Formatting-Intact-with-Deepseek/issues).
 
 ## ⭐️ Show your support
 
