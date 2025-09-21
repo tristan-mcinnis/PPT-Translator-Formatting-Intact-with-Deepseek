@@ -1,95 +1,109 @@
-# PPT Translator (Formatting Intact) with Deepseek 🎯
+# PPT Translator – Multi-Provider Edition
 
-A powerful PowerPoint translation tool that preserves all formatting while translating content using the Deepseek API. This tool maintains fonts, colors, layouts, and other styling elements while providing accurate translations between languages.
+Translate PowerPoint presentations while preserving formatting and layout. This CLI-focused tool now supports DeepSeek, OpenAI's latest GPT-5 family (GPT-5, GPT-5 Mini, GPT-5 Nano), Anthropic models, and Grok. It extracts slide content, performs high-quality translations with caching and chunking, and rebuilds decks with styles intact.
 
-## ✨ Features
+## ✨ Key Features
 
-- Preserves all PowerPoint formatting during translation
-- Supports tables, text boxes, and other PowerPoint elements
-- Maintains font styles, sizes, colors, and alignments
-- Intelligent text chunking for better translation quality
-- Caches translations to avoid duplicate API calls
-- Multi-threaded processing for faster execution
-- Creates intermediate backups during translation
-- Supports custom source and target languages
+- **Multi-provider support** – switch between DeepSeek, OpenAI, Anthropic, and Grok using a simple CLI flag.
+- **Latest model coverage** – ready for GPT-5, GPT-5 Mini, GPT-5 Nano, and the newest Anthropic and Grok offerings.
+- **Formatting preserved** – fonts, colours, spacing, tables, and alignment are retained after translation.
+- **Translation caching** – avoids duplicate API calls for repeated strings.
+- **Chunk-aware processing** – intelligently splits long text to maintain quality and avoid token limits.
+- **Threaded slide handling** – speeds up large decks using configurable worker threads.
+- **Testable architecture** – modular codebase with Pytest-based unit tests.
 
-## 🚀 Installation
+## 📦 Requirements
 
-1. Clone this repository:
+- Python 3.10+
+- macOS (primary target), Linux, or Windows
+- Provider API keys stored in environment variables (see below)
+
+Install dependencies:
+
 ```bash
-git clone https://github.com/tristan-mcinnis/PPT-Translator-Formatting-Intact-with-Deepseek.git
-cd PPT-Translator-Formatting-Intact-with-Deepseek
-```
-
-2. Create and activate a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install required packages:
-```bash
+python3 -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate  # Windows PowerShell
 pip install -r requirements.txt
 ```
 
-4. Create a `.env` file in the project root and add your Deepseek API key:
-```
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
-```
+## 🔐 Configuration
 
-## 💻 Usage
-
-1. Run the script:
-```bash
-python main.py
-```
-
-2. Follow the prompts:
-   - Enter the path to your PowerPoint file
-   - Specify source language code (default: 'zh' for Chinese)
-   - Specify target language code (default: 'en' for English)
-
-3. The script will:
-   - Generate an XML representation of your PowerPoint
-   - Translate the content while preserving formatting
-   - Create a new PowerPoint file with the translated content
-   - Save the output file as `{original_filename}_translated.pptx`
-
-## 📝 Example
+Copy `example.env` to `.env` and fill in the API keys for the providers you plan to use. All keys are optional – only populate the providers you intend to call.
 
 ```bash
-Please enter the path to your PowerPoint file: /path/to/your/presentation.pptx
-Enter source language code (default 'zh' for Chinese): zh
-Enter target language code (default 'en' for English): en
+cp example.env .env
 ```
 
-## ⚙️ Supported Languages
+Environment variables of interest:
 
-The tool supports all languages available through the Deepseek API. Common language codes include:
-- 'zh': Chinese
-- 'en': English
-- 'es': Spanish
-- 'fr': French
-- 'de': German
-- 'ja': Japanese
-- 'ko': Korean
+| Provider  | Required variable         | Optional variables                 | Example default model           |
+|-----------|---------------------------|------------------------------------|---------------------------------|
+| DeepSeek  | `DEEPSEEK_API_KEY`        | `DEEPSEEK_API_BASE`                | `deepseek-chat`                 |
+| OpenAI    | `OPENAI_API_KEY`          | `OPENAI_ORG`                       | `gpt-5` (use `--model` for Mini/Nano) |
+| Anthropic | `ANTHROPIC_API_KEY`       | —                                  | `claude-3.7-sonnet`             |
+| Grok      | `GROK_API_KEY`            | `GROK_API_BASE`                    | `grok-beta`                     |
 
-## 🔍 Notes
+> 📝 The CLI reads your `.env` file automatically when run from a shell session that has the variables exported. On macOS you can add the exports to `~/.zshrc` or use `direnv` for project-specific secrets.
 
-- The tool automatically adjusts font sizes for translated text to maintain layout integrity
-- English translations use Arial font by default for better compatibility
-- Font sizes are reduced by 20% for English text to accommodate typically longer translations
-- Intermediate XML files are automatically cleaned up after successful processing
+## 🚀 Usage
 
-## 📄 License
+Run the CLI with the path to a single presentation or a directory tree:
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+```bash
+python main.py /path/to/decks \
+  --provider openai \
+  --model gpt-5-mini \
+  --source-lang zh \
+  --target-lang en \
+  --max-workers 4
+```
+
+Common options:
+
+- `--provider {deepseek,openai,anthropic,grok}` – choose the model provider.
+- `--model MODEL_NAME` – override the default model for that provider (e.g. `gpt-5-nano`).
+- `--source-lang` / `--target-lang` – ISO language codes.
+- `--max-chunk-size` – character limit per translation request (default: 1000).
+- `--max-workers` – number of threads used when scanning slides (default: 4).
+- `--keep-intermediate` – keep intermediate XML files for inspection/debugging.
+
+The tool will generate:
+
+1. `{deck}_original.xml` – source deck contents.
+2. `{deck}_translated.xml` – translated content.
+3. `{deck}_translated.pptx` – rebuilt presentation with translated text and formatting intact.
+
+## 🧪 Testing
+
+Run unit tests with Pytest:
+
+```bash
+pytest
+```
+
+The test suite focuses on translation chunking/caching and CLI utilities to ensure the core pipeline stays reliable as providers evolve.
+
+## 🛠️ Project Structure
+
+```
+.
+├── ppt_translator/
+│   ├── cli.py               # CLI parsing and orchestration
+│   ├── pipeline.py          # PPT extraction, translation, regeneration
+│   ├── providers/           # DeepSeek, OpenAI, Anthropic, Grok adapters
+│   ├── translation.py       # Chunking + caching translation service
+│   └── utils.py             # Filesystem helpers
+├── tests/                   # Pytest suite
+├── example.env              # Environment variable template
+├── requirements.txt
+└── main.py                  # Entry point (delegates to CLI)
+```
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/tristan-mcinnis/PPT-Translator-Formatting-Intact-with-Deepseek/issues).
+Pull requests and issues are welcome. Please run `pytest` before submitting changes and document any new providers or configuration steps in the README.
 
-## ⭐️ Show your support
+## 📄 License
 
-Give a ⭐️ if this project helped you!
-
+This project remains under the MIT License. See `LICENSE` for details.

@@ -1,5 +1,7 @@
 openai
+anthropic
 python-pptx>=0.6.21
 python-dotenv
 pyyaml
 aiohttp
+pytest
