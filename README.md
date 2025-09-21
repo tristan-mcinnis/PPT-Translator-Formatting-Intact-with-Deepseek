@@ -1,3 +1,5 @@
+<div align="center">
+
 # PPT Translator
 
 Convert your PowerPoint presentations to beautifully translated documents while preserving formatting
@@ -7,6 +9,8 @@ Convert your PowerPoint presentations to beautifully translated documents while 
 *Clean, fast, and reliable PowerPoint translation with multi-provider support and formatting preservation*
 
 ✨ [Features](#-features) • 🚀 [Quick Start](#-usage) • 📖 [Usage](#-usage) • 🧪 [Testing](#-testing) • 🤝 [Contributing](#-contributing)
+
+</div>
 
 ---
 
