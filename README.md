@@ -1,6 +1,6 @@
 <div align="center">
 
-![BCAB73AD-FD3C-4CAF-8C19-3E88279CE822_1_102_o](https://github.com/user-attachments/assets/21080ce6-1f77-4a90-99a2-ac2c1599b61b)
+<img src="https://github.com/user-attachments/assets/21080ce6-1f77-4a90-99a2-ac2c1599b61b" width="30%" alt="PPT Translator Logo">
 
 # PPT Translator
 
